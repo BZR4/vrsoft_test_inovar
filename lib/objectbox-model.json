@@ -1,0 +1,69 @@
+{
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
+    {
+      "id": "1:6001116863544240217",
+      "lastPropertyId": "2:755977760679423901",
+      "name": "Aluno",
+      "properties": [
+        {
+          "id": "1:7612974932920522446",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:755977760679423901",
+          "name": "nome",
+          "type": 9
+        }
+      ],
+      "relations": [
+        {
+          "id": "1:2598832435660329122",
+          "name": "cursos",
+          "targetId": "2:6342346975536318661"
+        }
+      ]
+    },
+    {
+      "id": "2:6342346975536318661",
+      "lastPropertyId": "3:4735708287246028626",
+      "name": "Curso",
+      "properties": [
+        {
+          "id": "1:2996112016834377701",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:439126668620594541",
+          "name": "descricao",
+          "type": 9
+        },
+        {
+          "id": "3:4735708287246028626",
+          "name": "ementa",
+          "type": 9
+        }
+      ],
+      "relations": []
+    }
+  ],
+  "lastEntityId": "2:6342346975536318661",
+  "lastIndexId": "0:0",
+  "lastRelationId": "2:407669239854417023",
+  "lastSequenceId": "0:0",
+  "modelVersion": 5,
+  "modelVersionParserMinimum": 5,
+  "retiredEntityUids": [],
+  "retiredIndexUids": [],
+  "retiredPropertyUids": [],
+  "retiredRelationUids": [
+    407669239854417023
+  ],
+  "version": 1
+}
