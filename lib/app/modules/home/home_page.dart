@@ -76,7 +76,7 @@ class _HomePageState extends State<HomePage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person_outlined),
-            activeIcon: Icon(Icons.favorite),
+            activeIcon: Icon(Icons.person),
             label: 'Alunos',
           ),
           BottomNavigationBarItem(
