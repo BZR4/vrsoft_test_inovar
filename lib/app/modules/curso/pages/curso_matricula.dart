@@ -115,12 +115,12 @@ class _CursoMatriculaState extends State<CursoMatricula> {
             mensagem = 'Oops! Selcione o aluno e o curso!';
           }
 
-          if (alunoSelecionado!.cursos.length > 2) {
+          if (alunoSelecionado != null && alunoSelecionado!.cursos.length > 2) {
             isAlunoExcedeMatriculas = true;
             mensagem = 'Limite máximo de matriculas por aluno.';
           }
 
-          if (cursoSelecionado!.alunos.length > 9) {
+          if (cursoSelecionado != null && cursoSelecionado!.alunos.length > 9) {
             isCursoExceMatriculas = true;
             mensagem = 'Limite máximo de matriculas por curso.';
           }

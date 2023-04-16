@@ -18,6 +18,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Cursos'),
@@ -27,44 +28,53 @@ class _HomePageState extends State<HomePage> {
             onTap: () => Modular.to.navigate('/cursos/'),
             child: Card(
               margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-              child: ListTile(
-                leading: Icon(
-                  FontAwesomeIcons.personChalkboard,
-                  size: 50,
-                  color: Theme.of(context).colorScheme.tertiary,
-                ),
-                title: const Text('Cursos'),
-                subtitle: const Text('Confira os cursos dispoíveis'),
+              child: Column(
+                children: [
+                  Image.asset(
+                    'assets/images/curso_reduzido.png',
+                    fit: BoxFit.fitHeight,
+                  ),
+                  const ListTile(
+                    title: Text('Cursos'),
+                    subtitle: Text('Confira os cursos dispoíveis'),
+                  ),
+                ],
               ),
             )),
         GestureDetector(
           onTap: () => Modular.to.navigate('/alunos/'),
           child: Card(
             margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-            child: ListTile(
-              leading: Icon(
-                FontAwesomeIcons.users,
-                size: 50,
-                color: Theme.of(context).colorScheme.tertiary,
-              ),
-              title: const Text('Alunos'),
-              subtitle:
-                  const Text('Confira os alunos da plataforma dispoíveis'),
+            child: Column(
+              children: [
+                Image.asset(
+                  'assets/images/aluno_reduzido.png',
+                  fit: BoxFit.fitHeight,
+                ),
+                const ListTile(
+                  title: Text('Alunos'),
+                  subtitle: Text('Confira os alunos da plataforma dispoíveis'),
+                ),
+              ],
             ),
           ),
         ),
         GestureDetector(
           onTap: () => Modular.to.navigate('/cursos/matriculas'),
           child: Card(
-            child: ListTile(
-              leading: Icon(
-                FontAwesomeIcons.solidAddressBook,
-                size: 50,
-                color: Theme.of(context).colorScheme.tertiary,
-              ),
-              title: const Text('Matrículas'),
-              subtitle:
-                  const Text('Gestão de matrículas para os cursos dispoíveis'),
+            margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+            child: Column(
+              children: [
+                Image.asset(
+                  'assets/images/matricula_reduzido.png',
+                  fit: BoxFit.fitHeight,
+                ),
+                const ListTile(
+                  title: Text('Matrículas'),
+                  subtitle:
+                      Text('Gestão de matrículas para os cursos dispoíveis'),
+                ),
+              ],
             ),
           ),
         ),
