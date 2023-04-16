@@ -1,27 +1,22 @@
-// // ignore_for_file: public_member_api_docs, sort_constructors_first
-// import 'package:flutter_modular/flutter_modular.dart';
-// import 'package:objectbox/objectbox.dart';
-// import 'package:vrsoft_test_inovar/app/entities/aluno_entity.dart';
+import 'package:flutter_modular/flutter_modular.dart';
+import 'package:vrsoft_test_inovar/app/modules/aluno/aluno_controller.dart';
+import 'package:vrsoft_test_inovar/app/modules/aluno/aluno_repository.dart';
+import 'package:vrsoft_test_inovar/app/modules/aluno/alunos_page.dart';
+import 'package:vrsoft_test_inovar/app/modules/curso/pages/aluno_form.dart';
 
-// import 'aluno_repository.dart';
+class AlunoModule extends Module {
+  @override
+  List<Bind<Object>> get binds => [
+        Bind((i) => AlunoRepository(i.get())),
+        Bind((i) => AlunoController(i.get()))
+      ];
 
-// part 'aluno_module.g.dart';
-
-// class AlunoModule extends Module {
-//   final Store store;
-
-//   AlunoModule({
-//     required this.store,
-//   });
-
-//   @override
-//   final List<Bind> binds = [
-//     // Bind.singleton<Future<Box<Aluno>>>(
-//     //     (i) => i.get<Future<Store>>().then((value) => value.box<Aluno>())),
-//   ];
-
-//   @override
-//   final List<ModularRoute> routes = [
-//     // ChildRoute('/alunos', child: (_, args) => AlunnosPage()),
-//   ];
-// }
+  @override
+  List<ModularRoute> get routes => [
+        ChildRoute(
+          Modular.initialRoute,
+          child: (context, args) => const AlunosPage(),
+        ),
+        ChildRoute('/novo', child: (context, args) => const AlunoForm()),
+      ];
+}

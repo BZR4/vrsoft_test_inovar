@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:vrsoft_test_inovar/app/entities/aluno_entity.dart';
 import 'package:vrsoft_test_inovar/app/shared/utils/texto_utils.dart';
 import 'package:vrsoft_test_inovar/app/shared/widgets/custom_card_widget.dart';
@@ -7,16 +8,37 @@ import 'package:vrsoft_test_inovar/app/shared/widgets/custom_card_widget.dart';
 import '../../shared/widgets/text_input_widget.dart';
 import 'aluno_controller.dart';
 
-class AlunosPage extends StatelessWidget {
-  const AlunosPage({super.key, required this.controller});
+class AlunosPage extends StatefulWidget {
+  const AlunosPage({super.key});
 
-  final AlunoController controller;
+  @override
+  State<AlunosPage> createState() => _AlunosPageState();
+}
+
+class _AlunosPageState extends State<AlunosPage> {
+  late final AlunoController controller;
+
+  @override
+  void initState() {
+    controller = Modular.get<AlunoController>();
+    controller.carregar();
+    super.initState();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Alunos'),
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back,
+          ),
+          onPressed: () {
+            Modular.to.navigate('/');
+          },
+        ),
       ),
       body: Observer(
         builder: (context) {
@@ -29,38 +51,7 @@ class AlunosPage extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          final nomeController = TextEditingController();
-          showBottomSheet(
-            elevation: 4,
-            context: context,
-            builder: (context) {
-              return SizedBox(
-                height: MediaQuery.of(context).size.height / 2,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    InputTexto(
-                        controller: nomeController,
-                        campo: 'Nome',
-                        icon: Icons.text_fields),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(16, 16, 32, 32),
-                      child: SizedBox(
-                        height: 48,
-                        child: FilledButton(
-                          onPressed: () {
-                            controller.salvar(nomeController.text);
-                            Navigator.of(context).pop();
-                          },
-                          child: const Text('SALVAR'),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            },
-          );
+          Modular.to.navigate('/alunos/novo');
         },
         label: const Text('CRIAR'),
       ),

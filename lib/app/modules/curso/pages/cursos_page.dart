@@ -2,31 +2,40 @@ import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:vrsoft_test_inovar/app/entities/curso_entity.dart';
-import 'package:vrsoft_test_inovar/app/modules/aluno/aluno_controller.dart';
 import 'package:vrsoft_test_inovar/app/modules/curso/curso_controller.dart';
-import 'package:vrsoft_test_inovar/app/modules/curso/pages/curso_formulario.dart';
 import 'package:vrsoft_test_inovar/app/modules/curso/pages/curso_page.dart';
 import 'package:vrsoft_test_inovar/app/shared/utils/texto_utils.dart';
 import 'package:vrsoft_test_inovar/app/shared/widgets/custom_card_widget.dart';
-import 'package:mobx/mobx.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
-import '../../../shared/widgets/text_input_widget.dart';
+class CursosPage extends StatefulWidget {
+  const CursosPage({super.key});
 
-class CursosPage extends StatelessWidget {
-  const CursosPage(
-      {super.key,
-      required this.cursoController,
-      required this.alunoController});
+  @override
+  State<CursosPage> createState() => _CursosPageState();
+}
 
-  final CursoController cursoController;
-  final AlunoController alunoController;
+class _CursosPageState extends State<CursosPage> {
+  late final CursoController cursoController;
+
+  @override
+  void initState() {
+    cursoController = Modular.get<CursoController>();
+    cursoController.carregar();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Cursos'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Modular.to.navigate('/');
+          },
+        ),
       ),
       body: Observer(
         builder: (context) {
@@ -38,49 +47,7 @@ class CursosPage extends StatelessWidget {
         },
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          final descricaoController = TextEditingController();
-          final ementaController = TextEditingController();
-          showBottomSheet(
-            elevation: 4,
-            context: context,
-            builder: (context) {
-              return SizedBox(
-                height: MediaQuery.of(context).size.height / 2,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    InputTexto(
-                        controller: descricaoController,
-                        campo: 'Descrição',
-                        icon: Icons.text_fields),
-                    InputTexto(
-                      controller: ementaController,
-                      campo: 'Ementa',
-                      icon: Icons.text_fields,
-                      multiLinhas: 3,
-                      limite: 500,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(16, 16, 32, 32),
-                      child: SizedBox(
-                        height: 48,
-                        child: FilledButton(
-                          onPressed: () {
-                            cursoController.salvar(descricaoController.text,
-                                ementaController.text);
-                            Navigator.of(context).pop();
-                          },
-                          child: const Text('SALVAR'),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            },
-          );
-        },
+        onPressed: () => Modular.to.navigate('/cursos/novo'),
         label: const Text('CRIAR'),
       ),
     );

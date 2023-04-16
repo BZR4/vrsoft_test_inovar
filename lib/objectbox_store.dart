@@ -1,24 +1,29 @@
-import 'package:flutter_modular/flutter_modular.dart';
+import 'dart:io';
 import 'package:path_provider/path_provider.dart';
-import 'package:path/path.dart' as path;
+import 'package:path/path.dart' as p;
+import 'package:vrsoft_test_inovar/app/entities/aluno_entity.dart';
+import 'package:vrsoft_test_inovar/app/entities/curso_entity.dart';
 import 'package:vrsoft_test_inovar/objectbox.g.dart';
 
-class ObjectBox extends Disposable {
-  late final Store store;
+class ObjectBoxStore {
+  late final Store _store;
 
-  ObjectBox._create(this.store) {}
+  static final ObjectBoxStore _singleton = ObjectBoxStore._();
 
-  static Future<ObjectBox> create() async {
-    final docDir = await getApplicationDocumentsDirectory();
-    final store = await openStore(directory: path.join(docDir.path, 'vrsoft'));
+  ObjectBoxStore._();
 
-    return ObjectBox._create(store);
+  static ObjectBoxStore get instance => _singleton;
+
+  Future<Store> init() async {
+    Directory documentDirectory = await getApplicationDocumentsDirectory();
+    final pathDocumentDirectory = p.join(documentDirectory.path, 'db');
+    _store = await openStore(directory: pathDocumentDirectory);
+
+    return _store;
   }
 
-  Box<T> getBox<T extends Object>() => store.box();
+  Box<Aluno> get boxAluno => _store.box<Aluno>();
+  Box<Curso> get boxCurso => _store.box<Curso>();
 
-  @override
-  void dispose() {
-    store.close();
-  }
+  get store => _store;
 }

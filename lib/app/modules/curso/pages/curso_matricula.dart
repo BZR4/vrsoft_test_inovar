@@ -1,34 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:vrsoft_test_inovar/app/entities/aluno_entity.dart';
 import 'package:vrsoft_test_inovar/app/entities/curso_entity.dart';
 import 'package:vrsoft_test_inovar/app/modules/aluno/aluno_controller.dart';
-import 'package:vrsoft_test_inovar/app/modules/aluno/aluno_repository.dart';
 import 'package:vrsoft_test_inovar/app/modules/curso/curso_controller.dart';
-import 'package:vrsoft_test_inovar/app/modules/curso/curso_repository.dart';
-import 'package:vrsoft_test_inovar/app/shared/widgets/text_input_widget.dart';
-
-import '../../../shared/utils/texto_utils.dart';
 
 class CursoMatricula extends StatefulWidget {
-  const CursoMatricula(
-      {super.key,
-      required this.alunoController,
-      required this.cursoController});
-
-  final CursoController cursoController;
-  final AlunoController alunoController;
+  const CursoMatricula({super.key});
 
   @override
   State<CursoMatricula> createState() => _CursoMatriculaState();
 }
 
 class _CursoMatriculaState extends State<CursoMatricula> {
-  int _index = 0;
+  late final CursoController cursoController;
+  late final AlunoController alunoController;
 
   @override
   void initState() {
-    // cursoSelecionado = widget.cursoController.cursos.first;
     super.initState();
+    cursoController = Modular.get<CursoController>();
+    alunoController = Modular.get<AlunoController>();
+    cursoController.carregar();
+    alunoController.carregar();
   }
 
   Curso? cursoSelecionado;
@@ -37,10 +32,16 @@ class _CursoMatriculaState extends State<CursoMatricula> {
 
   @override
   Widget build(BuildContext context) {
-    final controller = TextEditingController();
-
     return Scaffold(
-      appBar: AppBar(title: const Text('Matrículas')),
+      appBar: AppBar(
+        title: const Text('Matrículas'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Modular.to.navigate('/');
+          },
+        ),
+      ),
       body: SizedBox(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -52,17 +53,19 @@ class _CursoMatriculaState extends State<CursoMatricula> {
             ),
             Padding(
               padding: const EdgeInsets.only(left: 16),
-              child: DropdownButton(
-                value: cursoSelecionado,
-                items: widget.cursoController.cursos
-                    .map((element) => DropdownMenuItem<Curso>(
-                        value: element, child: Text(element.descricao)))
-                    .toList(),
-                onChanged: (value) {
-                  setState(() {
-                    cursoSelecionado = value!;
-                  });
-                },
+              child: Observer(
+                builder: (BuildContext context) => DropdownButton(
+                  value: cursoSelecionado,
+                  items: cursoController.cursos
+                      .map((element) => DropdownMenuItem<Curso>(
+                          value: element, child: Text(element.descricao)))
+                      .toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      cursoSelecionado = value!;
+                    });
+                  },
+                ),
               ),
             ),
             const Divider(
@@ -75,26 +78,28 @@ class _CursoMatriculaState extends State<CursoMatricula> {
               padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
               child: Text('Alunos'),
             ),
-            Wrap(
-              spacing: 5,
-              runSpacing: 5,
-              alignment: WrapAlignment.spaceAround,
-              children: widget.alunoController.alunos.map((c) {
-                return ChoiceChip(
-                  tooltip: 'Possui ${c.cursos.length} matrículas.',
-                  selectedColor:
-                      Theme.of(context).colorScheme.primary.withAlpha(125),
-                  label: Text(c.nome),
-                  selected: alunoSelecionado == c,
-                  onSelected: (value) {
-                    setState(() {
-                      if (value) {
-                        alunoSelecionado = value ? c : null;
-                      }
-                    });
-                  },
-                );
-              }).toList(),
+            Observer(
+              builder: (BuildContext context) => Wrap(
+                spacing: 5,
+                runSpacing: 5,
+                alignment: WrapAlignment.spaceAround,
+                children: alunoController.alunos.map((c) {
+                  return ChoiceChip(
+                    tooltip: 'Possui ${c.cursos.length} matrículas.',
+                    selectedColor:
+                        Theme.of(context).colorScheme.primary.withAlpha(125),
+                    label: Text(c.nome),
+                    selected: alunoSelecionado == c,
+                    onSelected: (value) {
+                      setState(() {
+                        if (value) {
+                          alunoSelecionado = value ? c : null;
+                        }
+                      });
+                    },
+                  );
+                }).toList(),
+              ),
             )
           ],
         ),
@@ -104,6 +109,11 @@ class _CursoMatriculaState extends State<CursoMatricula> {
           bool isAlunoExcedeMatriculas = false;
           bool isCursoExceMatriculas = false;
           String mensagem = '';
+
+          if (alunoSelecionado == null || cursoSelecionado == null) {
+            isAlunoExcedeMatriculas = true;
+            mensagem = 'Oops! Selcione o aluno e o curso!';
+          }
 
           if (alunoSelecionado!.cursos.length > 2) {
             isAlunoExcedeMatriculas = true;
@@ -123,8 +133,8 @@ class _CursoMatriculaState extends State<CursoMatricula> {
               ),
             );
           } else {
-            widget.alunoController
-                .salvarMatricula(alunoSelecionado!, cursoSelecionado!);
+            alunoController.salvarMatricula(
+                alunoSelecionado!, cursoSelecionado!);
           }
         },
         label: const Text('MATRICULAR'),

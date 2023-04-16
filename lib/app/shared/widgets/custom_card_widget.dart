@@ -44,13 +44,16 @@ class BackgroundCard extends StatelessWidget {
         return CardComBackground(imageAsset: TipoCard.getTipo(tipoCard.id));
       case TipoCard.curso:
         return CardComBackground(imageAsset: TipoCard.getTipo(tipoCard.id));
+      case TipoCard.matricula:
+        return CardComBackground(imageAsset: TipoCard.getTipo(tipoCard.id));
     }
   }
 }
 
 enum TipoCard {
   aluno(1, 'assets/images/aluno.jpg'),
-  curso(2, 'assets/images/curso.jpg');
+  curso(2, 'assets/images/curso.jpg'),
+  matricula(3, 'assets/images/matricula.png');
 
   final int id;
   final String asset;
